@@ -8,3 +8,4 @@ public class GattinoScheggia extends Gattino{
         super(5.0, Color.WHITE);
     }
 }
+
