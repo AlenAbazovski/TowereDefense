@@ -1,19 +1,24 @@
 package com.example.towerdefensefinale;
-
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.canvas.GraphicsContext;
 
 public class Gattino {
     private double x, y;
     private double velocità;
     private boolean fermo;
-    private Color colore;
+    private Image sprite;
 
-    public Gattino(double velocità, Color colore) {
-        this.x = -30; // Parte da sinistra
+    public Gattino(double velocità, String nomefile) {
+        this.x = -60; // Parte da sinistra
         this.y = 150 + (Math.random() * 300); // altezza casuale
         this.velocità = velocità;
         this.fermo = false;
-        this.colore = colore;
+
+        try {
+            this.sprite = new Image(getClass().getResourceAsStream("/ ciccione.png"));
+        } catch (Exception e){;
+            System.out.println("Errore nel caricamento di: ciccione.png");
+        }
     }
 
     public double getX() {
@@ -48,17 +53,17 @@ public class Gattino {
         this.fermo = fermo;
     }
 
-    public Color getColore() {
-        return colore;
-    }
 
-    public void setColore(Color colore) {
-        this.colore = colore;
-    }
 
     public void muovi(){
         if(!fermo){
             this.x += this.velocità;
+        }
+    }
+
+    public void disegna(GraphicsContext gx){
+        if (sprite != null) {
+            gx.drawImage(sprite, x, y, 64, 64);
         }
     }
 }
