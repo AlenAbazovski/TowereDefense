@@ -48,7 +48,7 @@ public class SagraDefense extends Application{
             public void handle(long l) {
 
             }
-        }
+        };
     }
 }
 
