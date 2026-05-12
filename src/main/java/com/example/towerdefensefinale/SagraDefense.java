@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
@@ -46,7 +47,26 @@ public class SagraDefense extends Application{
 
             @Override
             public void handle(long l) {
+                if (!giocoFinito){
+                    counter++;
+                }
+            }
 
+            //ogni circa 2 secondi nasce un gatto a caso
+            if(counter >= 120){
+
+            }
+        }
+
+
+        public void creaGattoCasuale(){
+            double r = Math.random();
+            if (r < 0.33){
+                listaGattini.add(new GattinoScheggia());
+            }else if(r < 0.66){
+                listaGattini.add(new GattinoCiccione());
+            }else {
+                listaGattini.add(new GattinoPigro(0, Color.AZURE));
             }
         };
     }
