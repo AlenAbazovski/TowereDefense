@@ -11,17 +11,29 @@ public class Gattino {
     private Image sprite;
     private Color colore;
 
-    public Gattino(double velocità, String nomefile) {
-        this.x = -60; // Parte da sinistra
-        this.y = 150 + (Math.random() * 300); // altezza casuale
+    public Gattino(double velocità, String nomefile, Color colore) {
+        this.x = -30; // Parte da sinistra
+        this.y = 250 + (Math.random() * 250); // altezza casuale
         this.velocità = velocità;
         this.fermo = false;
+        this.colore = colore;
 
         try {
-            this.sprite = new Image(getClass().getResourceAsStream("/ ciccione.png"));
+            // Cerchiamo l'immagine partendo dalla cartella 'img' posizionata nella radice delle risorse
+            java.io.InputStream stream = getClass().getResourceAsStream("/img/" + nomefile);
+
+            if (stream == null) {
+                // Alternativa di ripiego se la struttura dei moduli richiede un percorso relativo
+                stream = getClass().getResourceAsStream("img/" + nomefile);
+            }
+
+            if (stream != null) {
+                this.sprite = new Image(stream);
+            } else {
+                System.out.println("Impossibile trovare il file: /img/" + nomefile);
+            }
         } catch (Exception e) {
-            ;
-            System.out.println("Errore nel caricamento di: ciccione.png");
+            System.out.println("Errore generico nel caricamento di: " + nomefile);
         }
     }
 
@@ -58,17 +70,47 @@ public class Gattino {
     }
 
 
-
-    public void muovi(){
-        if(!fermo){
+    public void muovi() {
+        if (!fermo) {
             this.x += this.velocità;
-        }
+
+
+            //si muove verso il basso o verso l'alto per raggiungere la ciotola
+            if(this.y < 250){
+                this.y += (this.velocità * 0.3);
+                } else if (this.y > 540) {
+                this.y -= (this.velocità * 0.3);
+                }
+            }
     }
 
-    public void disegna(GraphicsContext gx){
+    public void disegna(GraphicsContext gx) {
         if (sprite != null) {
             gx.drawImage(sprite, x, y, 64, 64);
+        }else {
+            gx.setFill(colore);
+            gx.fillOval(x, y, 30, 30);
         }
     }
+
+    public Image getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(Image sprite) {
+        this.sprite = sprite;
+    }
+
+    public Color getColore() {
+        return colore;
+    }
+
+    public void setColore(Color colore) {
+        this.colore = colore;
+    }
+
 }
+
+
+
 
