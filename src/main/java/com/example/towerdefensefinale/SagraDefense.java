@@ -5,6 +5,7 @@ import com.example.towerdefensefinale.Gattino;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -61,10 +62,28 @@ public class SagraDefense extends Application {
                         counter = 0;
                     }
 
+                    for (int i = 0; i < listaGattini.size();i++ ){
+                        Gattino g = listaGattini.get(i);//prendo il gattino alla posizione i
+                        g.muovi();
+                        g.disegna(gx);
+                    }
+
+                    //disegna le ciotole (distrazioni) piazzate a terra
+                    gx.setFill(Color.BROWN);
+                    for(int i = 0; i < listaCiotole.size(); i++){
+                        Distrazione d = listaCiotole.get(i); // prende le ciotole alla poszione i
+                        gx.fillOval(d.getX(), d.getY(), 20, 30);
+                    }
+
                 }
             }
         }.start();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Sagra defense -Aiuta la nonna!");
+        stage.show();
     }
+
+
 
     private void creaGattoCasuale() {
         double r = Math.random();
