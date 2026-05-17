@@ -57,9 +57,9 @@ public class SagraDefense extends Application {
                     counter++;
                     gx.drawImage(immagineSfondo, 0, 0, 800, 600);
 
-                    if (counter >= 120){
-                        creaGattoCasuale();
-                        counter = 0;
+                    for (Gattino g : listaGattini){
+                        g.muovi();
+                        g.disegna(gx);
                     }
 
                     for (int i = 0; i < listaGattini.size();i++ ){

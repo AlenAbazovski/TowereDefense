@@ -58,35 +58,17 @@ public class Gattino {
     }
 
 
-    public void muovi() {
-        if (!fermo) {
+
+    public void muovi(){
+        if(!fermo){
             this.x += this.velocità;
         }
     }
 
-    public void disegna(GraphicsContext gx) {
+    public void disegna(GraphicsContext gx){
         if (sprite != null) {
             gx.drawImage(sprite, x, y, 64, 64);
         }
     }
-
-    public Image getSprite() {
-        return sprite;
-    }
-
-    public void setSprite(Image sprite) {
-        this.sprite = sprite;
-    }
-
-    public Color getColore() {
-        return colore;
-    }
-
-    public void setColore(Color colore) {
-        this.colore = colore;
-    }
 }
-
-
-
 
