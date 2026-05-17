@@ -5,7 +5,7 @@ public class GattinoScheggia extends Gattino{
 
     public GattinoScheggia() {
         //chiama il costruttore della madre con velocità 5.00 e colore bianco
-        super(5.0, Color.WHITE);
+        super(5.0, "scheggia.png",Color.WHITE);
     }
 }
 
