@@ -57,8 +57,18 @@ public class SagraDefense extends Application {
                     counter++;
                     gx.drawImage(immagineSfondo, 0, 0, 800, 600);
 
+                    for (Distrazione d : listaCiotole){
+                        d.disegna(gx);
+                    }
+
                     for (Gattino g : listaGattini){
                         g.muovi();
+
+
+                        for (Distrazione d : listaCiotole){
+                            double distanzaX = Math.abs(g.getX() - d.getX());
+                            double distanzaY = Math.abs(g.getY() - d.getY());
+                        }
                         g.disegna(gx);
                     }
 
