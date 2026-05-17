@@ -13,7 +13,7 @@ public class Gattino {
 
     public Gattino(double velocità, String nomefile, Color colore) {
         this.x = -30; // Parte da sinistra
-        this.y = 250 + (Math.random() * 250); // altezza casuale
+        this.y = 330 + (Math.random() * 220);
         this.velocità = velocità;
         this.fermo = false;
         this.colore = colore;
@@ -74,19 +74,12 @@ public class Gattino {
         if (!fermo) {
             this.x += this.velocità;
 
-
-            //si muove verso il basso o verso l'alto per raggiungere la ciotola
-            if(this.y < 250){
-                this.y += (this.velocità * 0.3);
-                } else if (this.y > 540) {
-                this.y -= (this.velocità * 0.3);
-                }
-            }
+        }
     }
 
     public void disegna(GraphicsContext gx) {
         if (sprite != null) {
-            gx.drawImage(sprite, x, y, 64, 64);
+            gx.drawImage(sprite, x, y, 128, 128);
         }else {
             gx.setFill(colore);
             gx.fillOval(x, y, 30, 30);

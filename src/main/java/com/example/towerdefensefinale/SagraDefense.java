@@ -38,11 +38,10 @@ public class SagraDefense extends Application {
 
         // Gestione del click per piazzare le ciotole
         canvas.setOnMouseClicked(e -> {
-            if (!giocoFinito && puntiCoccole >= 20) {
+            if (!giocoFinito && listaCiotole.size() < 3) {
                 listaCiotole.add(new Distrazione(e.getX(), e.getY()));
-                puntiCoccole -= 20;
-            } else if (puntiCoccole < 20) {
-                System.out.println("non hai abbastanza punti cccole! Ne hai solo " +  puntiCoccole);
+            } else if (listaCiotole.size() >= 5) {
+                System.out.println("Hai gai 5 ciotole in campo");
 
             }
         });
@@ -74,14 +73,18 @@ public class SagraDefense extends Application {
                         for (int j = 0; j < listaCiotole.size(); j++) {
                             Distrazione d = listaCiotole.get(j);
 
-                            double distanzaX = Math.abs(g.getX() - d.getX());
-                            double PlainY = Math.abs(g.getY() - d.getY());
+                            double centroGattoX = g.getX() + 64;
+                            double centroGattoY = g.getY() + 64;
+                            double distanzaX = Math.abs(centroGattoX - d.getX());
+                            double PlainY = Math.abs(centroGattoY - d.getY());
 
                             // Se il gattino è vicino alla ciotola
-                            if (distanzaX < 30 && PlainY < 30) {
-                                g.setFermo(true);       // Il gatto si ferma a mangiare!
-                                listaCiotole.remove(j); // La ciotola sparisce perché è stata mangiata
-                                j--;                    // Sistema l'indice delle ciotole
+                            if (distanzaX < 35 && PlainY < 35) {
+                                listaCiotole.remove(j);
+                                listaGattini.remove(i);
+                                i--;
+                                j--;
+                                break;
                             }
                         }
 
@@ -102,18 +105,11 @@ public class SagraDefense extends Application {
                         d.disegna(gx); // <--- Chiama il metodo disegna() che carica topo.png!
                     }
 
-                    // 4. UNICO CICLO PER DISEGNARE LE CIOTOLE RIMASTE A TERRA
-                    gx.setFill(Color.BROWN);
-                    for (int i = 0; i < listaCiotole.size(); i++) {
-                        Distrazione d = listaCiotole.get(i);
-                        // Disegna la ciotola come un ovale schiacciato sul pavimento
-                        gx.fillOval(d.getX() - 10, d.getY() - 5, 20, 10);
-                    }
 
                     // 5. Controllo fine partita
                     if (polpettePerse >= 5) {
                         giocoFinito = true;
-                        gx.setFill(Color.RED);
+                        gx.setFont(javafx.scene.text.Font.font(30));
                         gx.fillText("GAME OVER: Troppi gatti golosi!", 300, 300);
                     }
                 }
