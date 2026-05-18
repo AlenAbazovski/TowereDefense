@@ -32,23 +32,24 @@ public class SagraDefense extends Application {
     public void start(Stage stage) {
         immagineSfondo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/SfondoCucina.png")));
         Pane root = new Pane();
-        Canvas canvas = new Canvas(800, 600);
+        javafx.geometry.Rectangle2D schermo = javafx.stage.Screen.getPrimary().getBounds();
+        Canvas canvas = new Canvas(schermo.getWidth(), schermo.getHeight());
         root.getChildren().add(canvas);
         GraphicsContext gx = canvas.getGraphicsContext2D();
 
         // Gestione del click per piazzare le ciotole
         canvas.setOnMouseClicked(e -> {
-           if(!giocoFinito){
                //controlla che a terra ci siano meno di 5 topi
-               if(listaCiotole.size() < 5){
+               if(!giocoFinito && listaCiotole.size() < 3){
                    listaCiotole.add(new Distrazione(e.getX(), e.getY()));
                }else{
                    System.out.println("ci sono gia 5 ciotole in campo ");
                }
-           }
 
         });
 
+        double larghezza = schermo.getWidth();
+        double altezza = schermo.getHeight();
         // Loop di gioco infinito
         new AnimationTimer() {
             int counter = 0;
@@ -59,10 +60,10 @@ public class SagraDefense extends Application {
                     counter++;
 
                     // 1. Cancella e ridisegna lo sfondo della cucina
-                    gx.drawImage(immagineSfondo, 0, 0, 800, 600);
+                    gx.drawImage(immagineSfondo, 0, 0, larghezza, altezza);
 
                     // 2. Fai nascere un gattino nuovo ogni 2 secondi (120 frame)
-                    if (counter >= 120) {
+                    if (counter >= 40) {
                         creaGattoCasuale();
                         counter = 0;
                     }
@@ -82,37 +83,45 @@ public class SagraDefense extends Application {
                         for (int j = 0; j < listaCiotole.size(); j++) {
                             Distrazione d = listaCiotole.get(j);
 
-                            double distanzaX = Math.abs(g.getX() - d.getX());
-                            double distanzaY = Math.abs(g.getY() - d.getY());
+                            double distanzaX = Math.abs(centroGattoX - d.getX());
+                            double distanzaY = Math.abs(centroGattoY - d.getY());
 
                             // se incontro il topo e il gatto si sta ancora muovendo
                             if (distanzaX < 60 && distanzaY < 60) {
                                 listaCiotole.remove(j);
                                 listaGattini.remove(i);
                                 i--;
-                                j--;
                                 break;
                             }
                         }
 
+                        if (i < 0 || i >= listaGattini.size()) continue;
+
                         //controllo all'arrivfa della ciotola della nonna
-                        if (centroGattoX >= 680 && !g.isFermo()) {
+                        if (centroGattoX >= larghezza * 0.85 && !g.isFermo()) {
                             g.setFermo(true);
                         }
 
-                        if (g.isFermo() && centroGattoX >= 670) {
+                        if (g.isFermo() && centroGattoX >= larghezza * 0.84) {
                             gattiniAllaCiotolaDellaNonna++;
 
                         }
 
 
                         // Se il gattino arriva alla fine dello schermo a destra (ruba il cibo della nonna)
-                        if (g.getX() > 720 && !g.isFermo()) {
+                        if (g.getX() > larghezza * 0.87 && !g.isFermo()) {
                             polpettePerse++;
                             listaGattini.remove(i);
                             i--; // Sistema l'indice dei gattini
                             continue; // Salta al prossimo gatto senza disegnarlo
                         }
+                        if (g instanceof GattinoScheggia && centroGattoX >= larghezza * 0.65) {
+                            ((GattinoScheggia) g).setVicinoAllaMeta(true);
+                        }
+                        if (g instanceof GattinoCiccione && centroGattoX >= larghezza * 0.83) {
+                            ((GattinoCiccione) g).setVicinoAllaMeta(true);
+                        }
+
 
                         // Disegna il gattino nella sua posizione attuale
                         g.disegna(gx);
@@ -141,6 +150,7 @@ public class SagraDefense extends Application {
 
         stage.setScene(new Scene(root));
         stage.setTitle("Sagra defense -Aiuta la nonna!");
+        stage.setFullScreen(true);
         stage.show();
     }
 
