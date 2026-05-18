@@ -142,7 +142,7 @@ public class SagraDefense extends Application {
                         giocoFinito = true;
                         gx.setFont(javafx.scene.text.Font.font(26));
                         gx.setFill(Color.RED);
-                        gx.fillText("GAME OVER: Tipo undertale! 2 gatti alla ciotola!", 120, 300);
+                        gx.fillText("GAME OVER: 2 gatti alla ciotola!", 120, 300);
                     }
                 }
             }
