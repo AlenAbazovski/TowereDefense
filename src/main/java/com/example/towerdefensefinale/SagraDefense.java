@@ -38,12 +38,15 @@ public class SagraDefense extends Application {
 
         // Gestione del click per piazzare le ciotole
         canvas.setOnMouseClicked(e -> {
-            if (!giocoFinito && listaCiotole.size() < 3) {
-                listaCiotole.add(new Distrazione(e.getX(), e.getY()));
-            } else if (listaCiotole.size() >= 5) {
-                System.out.println("Hai gai 5 ciotole in campo");
+           if(!giocoFinito){
+               //controlla che a terra ci siano meno di 5 topi
+               if(listaCiotole.size() < 5){
+                   listaCiotole.add(new Distrazione(e.getX(), e.getY()));
+               }else{
+                   System.out.println("ci sono gia 5 ciotole in campo ");
+               }
+           }
 
-            }
         });
 
         // Loop di gioco infinito
@@ -64,22 +67,26 @@ public class SagraDefense extends Application {
                         counter = 0;
                     }
 
+                    int gattiniAllaCiotolaDellaNonna = 0;
+
                     // 3. UNICO CICLO PER I GATTINI (Muove, controlla collisioni e disegna)
                     for (int i = 0; i < listaGattini.size(); i++) {
                         Gattino g = listaGattini.get(i);
                         g.muovi();
 
+                        double centroGattoX = g.getX() + 64;
+                        double centroGattoY = g.getY() + 64;
+
+
                         // Controlliamo se questo gattino 'g' tocca una delle ciotole
                         for (int j = 0; j < listaCiotole.size(); j++) {
                             Distrazione d = listaCiotole.get(j);
 
-                            double centroGattoX = g.getX() + 64;
-                            double centroGattoY = g.getY() + 64;
-                            double distanzaX = Math.abs(centroGattoX - d.getX());
-                            double PlainY = Math.abs(centroGattoY - d.getY());
+                            double distanzaX = Math.abs(g.getX() - d.getX());
+                            double distanzaY = Math.abs(g.getY() - d.getY());
 
-                            // Se il gattino è vicino alla ciotola
-                            if (distanzaX < 35 && PlainY < 35) {
+                            // se incontro il topo e il gatto si sta ancora muovendo
+                            if (distanzaX < 60 && distanzaY < 60) {
                                 listaCiotole.remove(j);
                                 listaGattini.remove(i);
                                 i--;
@@ -87,6 +94,17 @@ public class SagraDefense extends Application {
                                 break;
                             }
                         }
+
+                        //controllo all'arrivfa della ciotola della nonna
+                        if (centroGattoX >= 680 && !g.isFermo()) {
+                            g.setFermo(true);
+                        }
+
+                        if (g.isFermo() && centroGattoX >= 670) {
+                            gattiniAllaCiotolaDellaNonna++;
+
+                        }
+
 
                         // Se il gattino arriva alla fine dello schermo a destra (ruba il cibo della nonna)
                         if (g.getX() > 720 && !g.isFermo()) {
@@ -106,20 +124,27 @@ public class SagraDefense extends Application {
                     }
 
 
-                    // 5. Controllo fine partita
                     if (polpettePerse >= 5) {
                         giocoFinito = true;
                         gx.setFont(javafx.scene.text.Font.font(30));
+                        gx.setFill(Color.RED);
                         gx.fillText("GAME OVER: Troppi gatti golosi!", 300, 300);
+                    } else if (gattiniAllaCiotolaDellaNonna >= 2) {
+                        giocoFinito = true;
+                        gx.setFont(javafx.scene.text.Font.font(26));
+                        gx.setFill(Color.RED);
+                        gx.fillText("GAME OVER: Tipo undertale! 2 gatti alla ciotola!", 120, 300);
                     }
                 }
-            } // Chiude il metodo handle
-        }.start(); // <--- ORA CHIUDE E FA PARTIRE L'ANIMATION TIMER CORRETTAMENTE!
+            }
+        }.start();
 
         stage.setScene(new Scene(root));
         stage.setTitle("Sagra defense -Aiuta la nonna!");
         stage.show();
     }
+
+
 
     // Il metodo helper deve stare qui, staccato da tutto, dentro la classe principale
     private void creaGattoCasuale() {
