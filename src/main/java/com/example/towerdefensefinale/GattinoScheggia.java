@@ -12,23 +12,13 @@ public class GattinoScheggia extends Gattino{
 
     public GattinoScheggia() {
         //chiama il costruttore della madre con velocità 5.00 e colore bianco
-        super(6.5, "scheggia.png", Color.WHITE);
+        super(6.5, "scheggia1.png", Color.WHITE);
 
         frame1 = caricaImmagine("scheggia1.png");
         frame2 = caricaImmagine("scheggia2.png");
         frame3 = caricaImmagine("scheggia3.png");
     }
 
-    private Image caricaImmagine(String nome) {
-        try {
-            java.io.InputStream s = getClass().getResourceAsStream("/img/" + nome);
-            if (s == null) s = getClass().getResourceAsStream("img/" + nome);
-            if (s != null) return new Image(s);
-        } catch (Exception e) {
-            System.out.println("Errore caricamento: " + nome);
-        }
-        return null;
-    }
 
     @Override
     public void disegna(GraphicsContext gx) {
@@ -44,7 +34,11 @@ public class GattinoScheggia extends Gattino{
                 frameCounter = 0;
                 frameCorrente = (frameCorrente + 1) % 2; // cicla solo tra 0 e 1
             }
-            daMostrare = (frameCorrente == 0) ? frame1 : frame2;
+            if (frameCorrente == 0) {
+                daMostrare = frame1;
+            } else {
+                daMostrare = frame2;
+            }
         }
 
         if (daMostrare != null) {

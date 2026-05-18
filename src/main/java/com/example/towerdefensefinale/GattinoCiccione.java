@@ -14,7 +14,7 @@ public class GattinoCiccione extends Gattino{
 
     public GattinoCiccione() {
         //chiama il costruttore della madre con velocita 0.6 e colore DARKSLATEGREY
-        super(2.8, "ciccione.png", Color.DARKSLATEGREY);
+        super(2.8, "ciccione1.png", Color.DARKSLATEGREY);
 
         frame1 = caricaImmagine("ciccione1.png");
         frame2 = caricaImmagine("ciccione2.png");
@@ -22,16 +22,6 @@ public class GattinoCiccione extends Gattino{
         frame4 = caricaImmagine("ciccione4.png");
     }
 
-    private Image caricaImmagine(String nome) {
-        try {
-            java.io.InputStream s = getClass().getResourceAsStream("/img/" + nome);
-            if (s == null) s = getClass().getResourceAsStream("img/" + nome);
-            if (s != null) return new Image(s);
-        } catch (Exception e) {
-            System.out.println("Errore caricamento: " + nome);
-        }
-        return null;
-    }
 
     @Override
     public void disegna(GraphicsContext gx) {
@@ -54,7 +44,11 @@ public class GattinoCiccione extends Gattino{
                         animazioneAttaccoCompletata = true;
                     }
                 }
-                daMostrare = (frameCorrente == 0) ? frame3 : frame4;
+                if (frameCorrente == 0) {
+                    daMostrare = frame3;
+                } else {
+                    daMostrare = frame4;
+                }
             }
         } else {
             // Camminata normale: alterna ciccione1 e ciccione2 in loop
@@ -63,7 +57,11 @@ public class GattinoCiccione extends Gattino{
                 frameCounter = 0;
                 frameCorrente = (frameCorrente + 1) % 2;
             }
-            daMostrare = (frameCorrente == 0) ? frame1 : frame2;
+            if (frameCorrente == 0) {
+                daMostrare = frame1;
+            } else {
+                daMostrare = frame2;
+            }
         }
 
         if (daMostrare != null) {

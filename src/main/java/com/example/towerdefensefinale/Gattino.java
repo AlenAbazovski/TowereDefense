@@ -1,7 +1,6 @@
 package com.example.towerdefensefinale;
 import javafx.scene.image.Image;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
 
 public class Gattino {
@@ -10,10 +9,6 @@ public class Gattino {
     private boolean fermo;
     private Image sprite;
     private Color colore;
-    private Image[] frames;
-    private int frameCorrente = 0;
-    private int frameCounter = 0;
-    private int frameVelocità = 8;
     private boolean vicinoAllaMeta = false;
 
     public Gattino(double velocità, String nomefile, Color colore) {
@@ -43,33 +38,26 @@ public class Gattino {
         }
     }
 
-    public Gattino(double velocità, String[] nomiFrame, Color colore) {
-        this.x = -30; // Parte da sinistra
-        double altezza = javafx.stage.Screen.getPrimary().getBounds().getHeight();
-        this.y = altezza * 0.62 + (Math.random() * altezza * 0.26);
-        this.velocità = velocità;
-        this.fermo = false;
-        this.colore = colore;
 
-        this.frames = new Image[nomiFrame.length];
-        for (int i = 0; i < nomiFrame.length; i++) {
-            try {
-                // Cerchiamo l'immagine partendo dalla cartella 'img' posizionata nella radice delle risorse
-                java.io.InputStream stream = getClass().getResourceAsStream("/img/" + nomiFrame[i]);
-
-                if (stream == null) {
-                    // Alternativa di ripiego se la struttura dei moduli richiede un percorso relativo
-                    stream = getClass().getResourceAsStream("img/" + nomiFrame[i]);
-                }
-
-                if (stream != null) {
-                    this.frames[i] = new Image(stream);
-                }
-            } catch (Exception e) {
-                System.out.println("Errore generico nel caricamento di: " + nomiFrame[i]);
-            }
+    protected Image caricaImmagine(String nome) {
+        try {
+            java.io.InputStream s = getClass().getResourceAsStream("/img/" + nome);
+            if (s == null) s = getClass().getResourceAsStream("img/" + nome);
+            if (s != null) return new Image(s);
+        } catch (Exception e) {
+            System.out.println("Errore caricamento: " + nome);
         }
-        if (frames != null && frames.length > 0) this.sprite = frames[0];
+        return null;
+    }
+
+    public void disegna(GraphicsContext gx) {
+        // Comportamento originale con sprite singolo
+        if (sprite != null) {
+            gx.drawImage(sprite, x, y, 160, 160);
+        } else {
+            gx.setFill(colore);
+            gx.fillOval(x, y, 30, 30);
+        }
 
     }
 
@@ -89,13 +77,6 @@ public class Gattino {
         this.y = y;
     }
 
-    public double getVelocità() {
-        return velocità;
-    }
-
-    public void setVelocità(double velocità) {
-        this.velocità = velocità;
-    }
 
     public boolean isFermo() {
         return fermo;
@@ -116,38 +97,11 @@ public class Gattino {
     public boolean isVicinoAllaMeta() { return vicinoAllaMeta; }
     public void setVicinoAllaMeta(boolean v) { this.vicinoAllaMeta = v; }
 
-    public void disegna(GraphicsContext gx) {
-        if (frames != null && frames.length > 1) {
-            frameCounter++;
-            if (frameCounter >= frameVelocità){
-                frameCounter = 0;
-                frameCorrente = (frameCorrente + 1) % frames.length;
-            }
-            Image daDisegnare = frames[frameCorrente];
-            if(daDisegnare != null){
-                gx.drawImage(daDisegnare, x, y, 160, 160);
-            }else {
-                gx.setFill(colore);
-                gx.fillOval(x, y, 30, 30);
-            }
-        }else {
-            // Comportamento originale con sprite singolo
-            if (sprite != null) {
-                gx.drawImage(sprite, x, y, 160, 160);
-            } else {
-                gx.setFill(colore);
-                gx.fillOval(x, y, 30, 30);
-            }
-        }
-    }
 
-    public Image getSprite() {
-        return sprite;
-    }
 
-    public void setSprite(Image sprite) {
-        this.sprite = sprite;
-    }
+
+
+
 
     public Color getColore() {
         return colore;

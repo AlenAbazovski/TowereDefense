@@ -1,7 +1,5 @@
 package com.example.towerdefensefinale;
 
-import com.example.towerdefensefinale.Distrazione;
-import com.example.towerdefensefinale.Gattino;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -24,7 +22,6 @@ public class SagraDefense extends Application {
     private Image immagineSfondo;
 
     // Variabili del gioco
-    private int puntiCoccole = 100;
     private int polpettePerse = 0;
     private boolean giocoFinito = false;
 
@@ -43,7 +40,7 @@ public class SagraDefense extends Application {
                if(!giocoFinito && listaCiotole.size() < 3){
                    listaCiotole.add(new Distrazione(e.getX(), e.getY()));
                }else{
-                   System.out.println("ci sono gia 5 ciotole in campo ");
+                   System.out.println("ci sono gia 3 ciotole in campo ");
                }
 
         });
